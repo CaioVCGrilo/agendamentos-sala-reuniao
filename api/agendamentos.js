@@ -14,14 +14,17 @@ const pool = mysql.createPool({
 
 const LSEE_EXCEPTION_IP = '143.107.235.10';
 
+// A única sala de reunião
+const SALA_REUNIAO = 'Sala de Reunião Única';
+
 async function autoDeleteOldReservations() {
     console.log("Executando limpeza de agendamentos antigos...");
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayISO = yesterday.toISOString().split('T')[0];
     const deleteQuery = `
-        DELETE FROM agendamentos
-        WHERE DATE_ADD(data_inicio, INTERVAL dias_necessarios - 1 DAY) < ?;
+        DELETE FROM agendamentos_sala_reuniao
+        WHERE data_inicio < ?;
     `;
 
     try {
@@ -33,13 +36,13 @@ async function autoDeleteOldReservations() {
 }
 
 async function initializeDatabase() {
-    console.log("Tentando inicializar o banco de dados e criar a tabela 'agendamentos'...");
+    console.log("Tentando inicializar o banco de dados e criar a tabela 'agendamentos_sala_reuniao'...");
     const createTableQuery = `
-        CREATE TABLE IF NOT EXISTS agendamentos (
+        CREATE TABLE IF NOT EXISTS agendamentos_sala_reuniao (
             id INT AUTO_INCREMENT PRIMARY KEY,
             data_inicio DATE NOT NULL,
-            dias_necessarios INT NOT NULL,
-            pc_numero VARCHAR(50) NOT NULL,
+            hora_inicial TIME NOT NULL,
+            hora_final TIME NOT NULL,
             agendado_por VARCHAR(100) NOT NULL,
             pin VARCHAR(32) NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -48,14 +51,13 @@ async function initializeDatabase() {
 
     try {
         await pool.execute(createTableQuery);
-        console.log("Tabela 'agendamentos' verificada/criada com sucesso.");
+        console.log("Tabela 'agendamentos_sala_reuniao' verificada/criada com sucesso.");
     } catch (error) {
-        console.error("ERRO CRÍTICO: Falha ao inicializar a tabela agendamentos.", error);
+        console.error("ERRO CRÍTICO: Falha ao inicializar a tabela agendamentos_sala_reuniao.", error);
     }
 }
 
 initializeDatabase();
-//autoDeleteOldReservations();
 
 function checkDbConnection() {
     if (!process.env.MYSQL_HOST) {
@@ -67,55 +69,17 @@ function checkDbConnection() {
     return null;
 }
 
-const TODOS_PCS = ['PC 082', 'PC 083', 'PC 094', 'PC 095'];
-
-export async function GET_DISPONIVEIS(request) {
-    const connectionError = checkDbConnection();
-    if (connectionError) return connectionError;
-
-    try {
-        const { searchParams } = new URL(request.url);
-        const dataInicio = searchParams.get('dataInicial');
-        const diasNecessarios = parseInt(searchParams.get('diasNecessarios'), 10);
-
-        if (!dataInicio || !diasNecessarios || diasNecessarios < 1) {
-            return NextResponse.json(TODOS_PCS, { status: 200 });
-        }
-
-        const dataFimReserva = new Date(dataInicio);
-        dataFimReserva.setDate(dataFimReserva.getDate() + diasNecessarios - 1);
-        const dataFimISO = dataFimReserva.toISOString().split('T')[0];
-
-        const occupiedQuery = `
-            SELECT DISTINCT pc_numero
-            FROM agendamentos
-            WHERE
-                data_inicio <= ? AND DATE_ADD(data_inicio, INTERVAL dias_necessarios - 1 DAY) >= ?;
-        `;
-
-        const [occupiedResult] = await pool.execute(occupiedQuery, [dataFimISO, dataInicio]);
-        const occupiedPcs = occupiedResult.map(row => row.pc_numero);
-        const availablePcs = TODOS_PCS.filter(pc => !occupiedPcs.includes(pc));
-
-        return NextResponse.json(availablePcs, { status: 200 });
-
-    } catch (error) {
-        console.error('Erro ao buscar PCs disponíveis (GET_DISPONIVEIS):', error);
-        return NextResponse.json({ error: 'Erro ao verificar disponibilidade. Cheque a conexão com o DB.' }, { status: 503 });
-    }
-}
-
 export async function POST(request) {
     const connectionError = checkDbConnection();
     if (connectionError) return connectionError;
 
     try {
-        const { dataInicial, diasNecessarios, pc, nome, pin, codigo_lsee } = await request.json();
+        const { dataReserva, horaInicial, horaFinal, nome, pin, codigo_lsee } = await request.json();
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const requestDate = new Date(dataInicial + 'T00:00:00');
+        const requestDate = new Date(dataReserva + 'T00:00:00');
         requestDate.setHours(0, 0, 0, 0);
 
         if (requestDate < today) {
@@ -126,72 +90,67 @@ export async function POST(request) {
         }
 
         const clientIP = request.headers.get('x-forwarded-for') || request.ip;
-        const lseeCode = process.env.LSEE_CODE;
         let isPinRequired = true;
 
         if (clientIP === LSEE_EXCEPTION_IP) {
-            console.log(`Reserva via IP autorizado (${clientIP}). O PIN não será validado.`);
-            isPinRequired = false;
-        } else {
-            console.log(`Reserva via IP autorizado (${clientIP}). O PIN não será validado.`);
             isPinRequired = false;
         }
 
-        const dataInicio = dataInicial;
-        const dias = parseInt(diasNecessarios, 10);
-
-        if (!dataInicio || !dias || !pc || !nome || (isPinRequired && !pin)) {
+        if (!dataReserva || !horaInicial || !horaFinal || !nome || (isPinRequired && !pin)) {
             return NextResponse.json({ error: 'Dados incompletos. Todos os campos são obrigatórios.' }, { status: 400 });
         }
 
-        const dataFimReserva = new Date(dataInicio);
-        dataFimReserva.setDate(dataFimReserva.getDate() + dias - 1);
-        const dataFimISO = dataFimReserva.toISOString().split('T')[0];
+        // Converte a data e horários para objetos Date para a comparação
+        const inicioReserva = new Date(`${dataReserva}T${horaInicial}`);
+        const fimReserva = new Date(`${dataReserva}T${horaFinal}`);
+
+        if (fimReserva <= inicioReserva) {
+            return NextResponse.json(
+                { error: 'A hora final deve ser após a hora inicial.' },
+                { status: 400 }
+            );
+        }
 
         const conflictQuery = `
-            SELECT id, data_inicio, dias_necessarios, agendado_por
-            FROM agendamentos
-            WHERE pc_numero = ?
-              AND data_inicio <= ? AND DATE_ADD(data_inicio, INTERVAL dias_necessarios - 1 DAY) >= ?
-                LIMIT 1;
+            SELECT id, data_inicio, hora_inicial, hora_final, agendado_por
+            FROM agendamentos_sala_reuniao
+            WHERE
+                data_inicio = ? AND
+                ( (hora_inicial < ? AND hora_final > ?) OR (hora_inicial = ? AND hora_final = ?) );
         `;
 
-        const [conflicts] = await pool.execute(conflictQuery, [pc, dataFimISO, dataInicio]);
+        const [conflicts] = await pool.execute(conflictQuery, [dataReserva, horaFinal, horaInicial, horaInicial, horaFinal]);
 
         if (conflicts.length > 0) {
             const conflito = conflicts[0];
-            const dataFimConflito = new Date(conflito.data_inicio);
-            dataFimConflito.setDate(dataFimConflito.getDate() + conflito.dias_necessarios);
-
             return NextResponse.json({
                 error: 'CONFLITO DE AGENDAMENTO',
-                message: `O PC ${pc} já está reservado durante este período.`,
+                message: `A sala de reunião já está reservada das ${conflito.hora_inicial} às ${conflito.hora_final} neste dia.`,
                 conflito: {
                     agendado_por: conflito.agendado_por,
                     data_inicio: conflito.data_inicio,
-                    dias_necessarios: conflito.dias_necessarios
+                    hora_inicial: conflito.hora_inicial,
+                    hora_final: conflito.hora_final
                 }
             }, { status: 409 });
         }
 
         let hashedPin = '';
-        if (isPinRequired) {
-            hashedPin = crypto.createHash('md5').update(pin).digest('hex');
-        } else {
+        if (pin) {
             hashedPin = crypto.createHash('md5').update(pin).digest('hex');
         }
 
         const insertQuery = `
-            INSERT INTO agendamentos (
+            INSERT INTO agendamentos_sala_reuniao (
                 data_inicio,
-                dias_necessarios,
-                pc_numero,
+                hora_inicial,
+                hora_final,
                 agendado_por,
                 pin
             ) VALUES (?, ?, ?, ?, ?);
         `;
 
-        const [result] = await pool.execute(insertQuery, [dataInicial, dias, pc, nome, hashedPin]);
+        const [result] = await pool.execute(insertQuery, [dataReserva, horaInicial, horaFinal, nome, hashedPin]);
 
         return NextResponse.json({
             message: 'Agendamento criado com sucesso!',
@@ -204,7 +163,7 @@ export async function POST(request) {
     }
 }
 
-export async function GET_ALL_AGENDAMENTOS() {
+export async function GET(request) {
     const connectionError = checkDbConnection();
     if (connectionError) return connectionError;
 
@@ -215,13 +174,14 @@ export async function GET_ALL_AGENDAMENTOS() {
             `SELECT
                  id,
                  DATE_FORMAT(data_inicio, '%Y-%m-%d') AS data_inicio,
-                 dias_necessarios,
-                 pc_numero,
-                 agendado_por
-             FROM agendamentos
-             WHERE DATE_ADD(data_inicio, INTERVAL dias_necessarios - 0 DAY) >= ?
-             ORDER BY data_inicio ASC;`,
-            [today]
+                 hora_inicial,
+                 hora_final,
+                 agendado_por,
+                 ? as pc_numero
+             FROM agendamentos_sala_reuniao
+             WHERE data_inicio >= ?
+             ORDER BY data_inicio ASC, hora_inicial ASC;`,
+            [SALA_REUNIAO, today]
         );
 
         return NextResponse.json(agendamentos, { status: 200 });
@@ -241,16 +201,14 @@ export async function DELETE(request) {
         const id = searchParams.get('id');
         const { pinDigitado } = await request.json();
 
-        const clientIP = request.headers.get('x-forwarded-for') || request.ip;
-        let deleteQuery;
-        let queryParams;
-
         if (!id || !pinDigitado) {
             return NextResponse.json({ error: 'ID e PIN de liberação são obrigatórios.' }, { status: 400 });
         }
+
         const hashedPinDigitado = crypto.createHash('md5').update(pinDigitado).digest('hex');
-        deleteQuery = 'DELETE FROM agendamentos WHERE id = ? AND pin = ?';
-        queryParams = [id, hashedPinDigitado];
+
+        const deleteQuery = 'DELETE FROM agendamentos_sala_reuniao WHERE id = ? AND pin = ?';
+        const queryParams = [id, hashedPinDigitado];
 
         const [deleteResult] = await pool.execute(deleteQuery, queryParams);
 
@@ -264,12 +222,4 @@ export async function DELETE(request) {
         console.error('Erro ao processar cancelamento (DELETE):', error);
         return NextResponse.json({ error: 'Erro de infraestrutura ao cancelar o agendamento.' }, { status: 503 });
     }
-}
-
-export async function GET(request) {
-    const { searchParams } = new URL(request.url);
-    if (searchParams.has('dataInicial') && searchParams.has('diasNecessarios')) {
-        return GET_DISPONIVEIS(request);
-    }
-    return GET_ALL_AGENDAMENTOS();
 }

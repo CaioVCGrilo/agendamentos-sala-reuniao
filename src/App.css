@@ -3,13 +3,6 @@
 /* Fonte */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
 
-.footer {
-    text-align: center;
-    padding: 0 0;
-    color: #6b7280; /* cinza médio */
-    font-size: 0.875rem; /* 14px */
-}
-
 /* Estilos globais e de corpo */
 .app-container {
     background-color: #f3f4f6; /* cinza claro */
@@ -23,7 +16,7 @@
 /* Container principal (o "card" branco) */
 .main-card {
     background-color: white;
-    border-radius: 1rem;
+    border-radius: 1.25rem;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
     max-width: 80rem; /* 1280px */
@@ -80,7 +73,7 @@
 /* Tabela */
 .table-container {
     overflow-x: auto;
-    max-width: 100%; /* Corrigido para ocupar toda a largura disponível */
+    max-width: 100%;
 }
 
 .agendamentos-table {
@@ -245,7 +238,106 @@
     background-color: #dc2626;
 }
 
-/* --- */
+/* Estilos para o Calendário */
+.calendar-container {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.rbc-calendar {
+    font-family: 'Inter', sans-serif;
+}
+
+.rbc-header {
+    background-color: #f3f4f6;
+    color: #1f3a8a;
+    font-weight: 700;
+}
+
+.rbc-day-bg.rbc-today {
+    background-color: #e0e7ff; /* Cor para o dia atual */
+}
+
+.rbc-event {
+    border: none;
+    border-radius: 4px;
+    padding: 2px 5px;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.rbc-event-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Pop-up de detalhes do evento */
+.event-details-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    z-index: 1000;
+    text-align: center;
+    max-width: 90%;
+    width: 400px;
+}
+
+.event-details-popup h3 {
+    color: #1f3a8a;
+    margin-bottom: 1rem;
+}
+
+.event-details-popup p {
+    margin: 0.5rem 0;
+    color: #4b5563;
+}
+
+.event-details-popup .cancel-button {
+    margin-right: 0.5rem;
+}
+
+.close-popup-button {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.close-popup-button:hover {
+    background-color: #d1d5db;
+}
+
+/* Overlay para escurecer o fundo */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+.footer {
+    text-align: center;
+    padding: 0 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
 
 /* Responsividade: Dispositivos Móveis (Retrato) */
 @media (max-width: 640px) and (orientation: portrait) {
@@ -367,5 +459,52 @@
     .agendamentos-table th,
     .agendamentos-table td {
         padding: 0.5rem 1rem;
+    }
+}
+
+/* Ajustes para iPads (Retrato e Paisagem) e tablets maiores */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .app-container {
+        padding: 2rem 1rem; /* Ajusta o padding lateral */
+    }
+
+    .main-card {
+        border-radius: 1.5rem; /* Um pouco mais arredondado para tablets */
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra mais destacada */
+    }
+
+    .header {
+        padding: 2rem 2.5rem; /* Aumenta o padding do cabeçalho */
+    }
+
+    .header-title {
+        font-size: 2rem; /* Aumenta o tamanho da fonte do título */
+    }
+
+    .header-subtitle {
+        font-size: 1.1rem; /* Aumenta a fonte do subtítulo */
+    }
+
+    .content-section {
+        padding: 2.5rem; /* Aumenta o padding da seção de conteúdo */
+    }
+
+    /* Otimização do calendário para tablets */
+    .calendar-container {
+        padding: 1.5rem;
+    }
+
+    .rbc-calendar {
+        height: 600px !important; /* Aumenta a altura do calendário para tablets */
+    }
+
+    /* Reduz o tamanho da fonte dos cabeçalhos do calendário */
+    .rbc-header {
+        font-size: 1rem;
+    }
+
+    /* Melhora a leitura dos eventos */
+    .rbc-event {
+        font-size: 0.9rem;
     }
 }

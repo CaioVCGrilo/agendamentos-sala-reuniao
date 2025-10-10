@@ -1,36 +1,43 @@
+/* src/components/Formulario.css */
+
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
 
+body {
+    font-family: 'Inter', sans-serif; /* Usando Inter para um visual moderno */
+}
+
 .form-card {
     background-color: white;
-    padding: 0.5rem 2.5rem 2.5rem 2.5rem;
-    border-radius: 1rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2rem;
+    padding: 2.5rem 3rem; /* Aumentado o padding para mais espaço */
+    border-radius: 1.25rem; /* Bordas um pouco mais arredondadas */
+    box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -3px rgba(0, 0, 0, 0.05); /* Sombra mais suave */
+    margin-bottom: 2.5rem; /* Mais margem inferior */
 }
 
 .form-title {
-    font-size: 1.5rem;
+    font-size: 1.875rem; /* Título um pouco maior */
     font-weight: 700;
-    margin-bottom: 1rem;
-    text-align: left;
+    margin-bottom: 1.5rem; /* Mais espaço após o título */
+    text-align: center; /* Centralizando o título para uma aparência mais limpa */
     color: #1f3a8a;
     border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 1rem;
+    padding-bottom: 1.25rem; /* Mais padding abaixo da borda */
 }
 
 .form-group-modern {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.25rem; /* Aumentado o espaçamento entre os grupos de formulário */
 }
 
 .form-label-modern {
     display: block;
-    color: #4b5563;
+    color: #374151; /* Cor um pouco mais escura para melhor contraste */
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem; /* Mais espaço entre label e input */
+    font-size: 0.95rem; /* Um pouco maior para facilitar a leitura */
 }
 
 .form-input-wrapper {
@@ -39,29 +46,38 @@
 
 .input-icon {
     position: absolute;
-    left: 1rem;
+    left: 1.25rem; /* Ícone mais à esquerda */
     top: 50%;
     transform: translateY(-50%);
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.5rem; /* Ícone um pouco maior */
+    height: 1.5rem;
     color: #9ca3af;
 }
 
 .form-input-modern,
 .form-select-modern {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 3rem;
-    border-radius: 0.5rem;
+    padding: 1rem 1.25rem; /* Aumentado o padding para inputs mais altos e fáceis de clicar */
+    padding-left: 3.5rem; /* Espaço para o ícone, se houver */
+    border-radius: 0.625rem; /* Mais arredondado */
     border: 1px solid #d1d5db;
     transition: all 0.2s ease-in-out;
     outline: none;
     box-sizing: border-box;
+    font-size: 1rem; /* Tamanho da fonte padrão para inputs */
+    color: #374151; /* Cor do texto dentro do input */
+}
+
+/* Ajuste específico para inputs de tipo "date" e "time" que não têm ícone, para não ter padding-left excessivo */
+.form-input-modern[type="date"],
+.form-input-modern[type="time"] {
+    padding-left: 1.25rem; /* Remover o padding extra do ícone se não houver ícone */
 }
 
 .form-input-modern:focus,
 .form-select-modern:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2); /* Sombra de foco mais sutil e maior */
 }
 
 .form-button-modern {
@@ -69,24 +85,36 @@
     background-image: linear-gradient(to right, #2563eb, #1e40af);
     color: white;
     font-weight: 700;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 1.25rem; /* Botão mais alto */
+    border-radius: 0.625rem; /* Mais arredondado */
     border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    font-size: 1.05rem; /* Texto do botão um pouco maior */
+    box-shadow: 0 5px 15px -3px rgba(0, 0, 0, 0.15), 0 3px 6px -2px rgba(0, 0, 0, 0.08); /* Sombra mais pronunciada */
 }
 
 .form-button-modern:hover {
-    transform: translateY(-2px);
-    box-shadow: 6px 10px 1px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px); /* Efeito de elevação mais notável */
+    box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.2), 0 4px 10px -2px rgba(0, 0, 0, 0.1); /* Sombra mais intensa no hover */
 }
 
-/* --- */
+/* --- Container para horários lado a lado --- */
+.horarios-container {
+    display: flex;
+    gap: 1.5rem; /* Espaço entre os campos de horário */
+    margin-bottom: 1.25rem; /* Espaçamento consistente */
+}
+
+.horarios-container .form-group-modern {
+    flex: 1; /* Faz com que cada item ocupe a mesma quantidade de espaço */
+    margin-bottom: 0; /* Remove a margem inferior para evitar duplicação de espaço */
+}
+
+/* --- Responsividade --- */
 
 /* Responsividade: Dispositivos Móveis (Retrato) */
-@media (max-width: 640px) and (orientation: portrait) {
-    /* Estilos para o formulário */
+@media (max-width: 640px) {
     .form-card {
         padding: 1.5rem;
         box-shadow: none;
@@ -94,47 +122,70 @@
     }
 
     .form-title {
-        text-align: center;
-        padding-bottom: 0.75rem;
+        font-size: 1.5rem;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
     }
 
     .form-label-modern {
-        display: block;
-        color: #4b5563;
-        width: 90%;
+        font-size: 0.9rem;
         margin-bottom: 0.5rem;
-    }
-
-    /* Regra corrigida para o campo de data */
-    .form-input-modern[type="date"] {
-        width: 87%;
-        box-sizing: border-box;
-        padding: 0.75rem 1rem;
-    }
-
-    .input-icon {
-        left: 0.75rem;
-        width: 1rem;
-        height: 1rem;
-    }
-}
-
-/* Responsividade: Dispositivos Móveis (Paisagem) */
-@media (max-width: 900px) and (orientation: landscape) {
-    .form-card {
-        padding: 1.5rem 2rem;
-    }
-
-    .form-title {
-        font-size: 1.25rem;
     }
 
     .form-input-modern,
     .form-select-modern {
-        padding: 0.5rem 1rem 0.5rem 2.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        border-radius: 0.5rem;
+    }
+
+    /* Ajuste específico para inputs de data e hora em dispositivos móveis */
+    .form-input-modern[type="date"],
+    .form-input-modern[type="time"] {
+        padding-left: 1rem;
+    }
+
+    .horarios-container {
+        flex-direction: column; /* Empilhe os campos de horário em telas pequenas */
+        gap: 0.75rem; /* Reduzir um pouco o gap */
+        margin-bottom: 0.75rem;
     }
 
     .form-button-modern {
-        padding: 0.75rem;
+        padding: 1rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+    }
+}
+
+/* Responsividade: Dispositivos Móveis (Paisagem) */
+@media (min-width: 641px) and (max-width: 900px) and (orientation: landscape) {
+    .form-card {
+        padding: 2rem 2.5rem;
+    }
+
+    .form-title {
+        font-size: 1.6rem;
+    }
+
+    .form-input-modern,
+    .form-select-modern {
+        padding: 0.8rem 1rem;
+        padding-left: 3rem; /* Manter espaço para ícone se presente */
+        font-size: 0.95rem;
+    }
+
+    .form-input-modern[type="date"],
+    .form-input-modern[type="time"] {
+        padding-left: 1rem; /* Remover padding extra para inputs sem ícone */
+    }
+
+    .form-button-modern {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .horarios-container {
+        gap: 1rem; /* Ajuste no gap para paisagem */
     }
 }

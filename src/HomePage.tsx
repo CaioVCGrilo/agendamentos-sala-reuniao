@@ -2,22 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import FormularioAgendamento from './components/FormularioAgendamento';
+import CalendarioAgendamento from './components/CalendarioAgendamento';
 import './App.css';
 
-// Utility function to calculate the end date
-const calcularDataTermino = (dataInicioStr: string, diasNecessarios: number): Date => {
-    // 1. Convert the YYYY-MM-DD string to a Date object
-    const data = new Date(dataInicioStr + 'T00:00:00');
-    data.setDate(data.getDate() + (diasNecessarios - 1));
-    return data;
-};
-
+// Interface atualizada para sala de reunião com horários
 interface Agendamento {
     id: number;
     data_inicio: string;
-    dias_necessarios: number;
-    pc_numero: string;
+    hora_inicial: string;
+    hora_final: string;
     agendado_por: string;
+    pc_numero: string;
 }
 
 export default function HomePage() {
@@ -31,6 +26,8 @@ export default function HomePage() {
             if (response.ok) {
                 const data = await response.json();
                 setAgendamentos(data);
+            } else {
+                console.error("Erro ao carregar agendamentos:", response.statusText);
             }
         } catch (error) {
             console.error("Erro ao carregar agendamentos:", error);
@@ -60,11 +57,9 @@ export default function HomePage() {
 
             if (response.ok) {
                 alert(`Agendamento ${id} cancelado com sucesso!`);
-                fetchAgendamentos();
-            } else if (response.status === 403 || response.status === 404) {
-                alert(`Falha no Cancelamento: ${result.error || 'PIN ou ID incorreto.'}`);
+                fetchAgendamentos(); // Recarrega a lista de agendamentos
             } else {
-                alert(`Erro ao cancelar: ${result.error || 'Erro desconhecido.'}`);
+                alert(`Falha no Cancelamento: ${result.error || 'Erro desconhecido.'}`);
             }
 
         } catch (error) {
@@ -73,21 +68,15 @@ export default function HomePage() {
         }
     };
 
+    const handleAgendamentoSucesso = () => {
+        fetchAgendamentos(); // Recarrega a lista após o agendamento
+    };
+
     useEffect(() => {
         fetchAgendamentos();
     }, []);
 
-    // Get the current year dynamically for the copyright notice
     const currentYear = new Date().getFullYear();
-
-    // Lógica para filtrar agendamentos expirados
-    const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Zera o horário para a comparação ser somente por data
-
-    const agendamentosValidos = agendamentos.filter(agendamento => {
-        const dataTermino = calcularDataTermino(agendamento.data_inicio, agendamento.dias_necessarios);
-        return dataTermino >= hoje;
-    });
 
     return (
         <main className="app-container">
@@ -95,66 +84,25 @@ export default function HomePage() {
                 <header className="header">
                     <div className="header-logo-container">
                         <div>
-                            <h1 className="header-title">Agendamento de Servidores</h1>
+                            <h1 className="header-title">Agendamento de Salas de Reunião</h1>
                             <p className="header-subtitle">Laboratório de Sistemas de Energia Elétrica</p>
                         </div>
                     </div>
                 </header>
                 <div className="content-section">
-                    <FormularioAgendamento onAgendamentoSucesso={fetchAgendamentos} />
+                    <FormularioAgendamento
+                        onAgendamentoSucesso={handleAgendamentoSucesso}
+                    />
 
-                    <h2 className="section-title">Agendamentos Existentes</h2>
+                    <h2 className="section-title">Calendário de Agendamentos</h2>
 
                     {loading ? (
                         <p>Carregando agendamentos...</p>
                     ) : (
-                        <div className="table-container">
-                            <table className="agendamentos-table">
-                                <thead>
-                                <tr>
-                                    <th>Início</th> {/* Simplificado */}
-                                    <th>Término</th> {/* Novo título */}
-                                    <th>Nº PC</th>
-                                    <th>Agendado por</th>
-                                    <th>Ação</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {agendamentosValidos.map((agendamento) => {
-                                    // Formata a data de início para exibição
-                                    const dataInicioFormatada = agendamento.data_inicio ? new Date(agendamento.data_inicio + 'T00:00:00').toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : '';
-
-                                    // Calcula a data de término para exibição
-                                    const dataTermino = calcularDataTermino(agendamento.data_inicio, agendamento.dias_necessarios);
-                                    const dataTerminoFormatada = dataTermino.toLocaleDateString('pt-BR', {timeZone: 'UTC'});
-
-                                    return (
-                                        <tr key={agendamento.id}>
-                                            <td data-label="Início">{dataInicioFormatada}</td>
-                                            <td data-label="Término">{dataTerminoFormatada}</td>
-                                            <td data-label="Nº PC">
-                                                <span className={`pc-tag ${
-                                                    agendamento.pc_numero === 'PC 094' ? 'blue' :
-                                                        agendamento.pc_numero === 'PC 082' ? 'orange' :
-                                                            agendamento.pc_numero === 'PC 095' ? 'purple' :
-                                                                'green'
-                                                }`}>
-                                                    {agendamento.pc_numero}
-                                                </span>
-                                            </td>
-                                            {/* Corrected the variable name here */}
-                                            <td data-label="Agendado por">{agendamento.agendado_por}</td>
-                                            <td data-label="Ação">
-                                                <button onClick={() => handleCancelamento(agendamento.id)} className="cancel-button">
-                                                    Cancelar
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                                </tbody>
-                            </table>
-                        </div>
+                        <CalendarioAgendamento
+                            agendamentos={agendamentos}
+                            onCancelamento={handleCancelamento}
+                        />
                     )}
                 </div>
             </div>
