@@ -12,31 +12,31 @@ body {
 
 .form-card {
     background-color: white;
-    padding: 2.5rem 3rem;
+    padding: 1.5rem 2.5rem; /* Reduzido o padding vertical */
     border-radius: 1.25rem;
     box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.1), 0 6px 15px -3px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem; /* Reduzida a margem inferior */
 }
 
 .form-title {
-    font-size: 1.875rem;
+    font-size: 1.5rem; /* Título um pouco menor */
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem; /* Reduzido o espaçamento */
     text-align: center;
     color: #1f3a8a;
     border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 1.25rem;
+    padding-bottom: 1rem; /* Reduzido o padding */
 }
 
 .form-group-modern {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem; /* Reduzido o espaçamento entre os campos */
 }
 
 .form-label-modern {
     display: block;
     color: #374151;
     font-weight: 600;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem; /* Reduzido o espaçamento */
     font-size: 0.95rem;
 }
 
@@ -46,19 +46,19 @@ body {
 
 .input-icon {
     position: absolute;
-    left: 1.25rem;
+    left: 1rem; /* Ícone um pouco menor */
     top: 50%;
     transform: translateY(-50%);
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
     color: #9ca3af;
 }
 
 .form-input-modern,
 .form-select-modern {
     width: 100%;
-    padding: 1rem 1.25rem;
-    padding-left: 3.5rem;
+    padding: 0.75rem 1rem; /* Reduzido o padding vertical */
+    padding-left: 2.5rem; /* Ajustado para o ícone menor */
     border-radius: 0.625rem;
     border: 1px solid #d1d5db;
     transition: all 0.2s ease-in-out;
@@ -72,7 +72,7 @@ body {
 }
 
 .form-input-modern[type="date"] {
-    padding-left: 1.25rem;
+    padding-left: 1rem; /* Ajustado para o input de data */
 }
 
 .form-input-modern:focus,
@@ -86,7 +86,7 @@ body {
     background-image: linear-gradient(to right, #2563eb, #1e40af);
     color: white;
     font-weight: 700;
-    padding: 1.25rem;
+    padding: 1rem; /* Reduzido o padding vertical */
     border-radius: 0.625rem;
     border: none;
     cursor: pointer;
@@ -102,8 +102,8 @@ body {
 
 .horarios-container {
     display: flex;
-    gap: 1.5rem;
-    margin-bottom: 1.25rem;
+    gap: 1rem; /* Reduzido o espaçamento */
+    margin-bottom: 1rem; /* Reduzido o espaçamento */
 }
 
 .horarios-container .form-group-modern {
@@ -111,17 +111,15 @@ body {
     margin-bottom: 0;
 }
 
-/* NOVO: Estilos para o grupo de seletores de tempo */
 .time-select-group {
     display: flex;
     align-items: center;
-    gap: 0.5rem; /* Espaçamento entre os seletores */
+    gap: 0.5rem;
 }
 
-/* NOVO: Estilos para os seletores de hora e minuto */
 .time-select-group .form-select-modern.time-select {
     width: 50%;
-    padding: 1rem 1rem;
+    padding: 0.75rem 1rem; /* Reduzido o padding vertical */
     border: 1px solid #d1d5db;
     border-radius: 0.625rem;
     background-color: transparent;
@@ -147,78 +145,68 @@ body {
 /* Responsividade: Dispositivos Móveis (Retrato) */
 @media (max-width: 640px) {
     .form-card {
-        padding: 1.5rem;
+        padding: 1rem;
         box-shadow: none;
         border-radius: 0;
     }
 
     .form-title {
-        font-size: 1.5rem;
-        padding-bottom: 1rem;
-        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
     .form-label-modern {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.25rem;
     }
 
     .form-input-modern,
     .form-select-modern {
-        padding: 0.75rem 1rem;
-        font-size: 0.95rem;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
         border-radius: 0.5rem;
     }
 
     .horarios-container {
         flex-direction: column;
-        gap: 0.75rem;
-        margin-bottom: 0.75rem;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
     }
 
     .form-button-modern {
-        padding: 1rem;
-        font-size: 1rem;
+        padding: 0.8rem;
+        font-size: 0.95rem;
         border-radius: 0.5rem;
     }
 
-    /* Ajuste para o grupo de seleção de tempo em telas menores */
     .time-select-group {
-        gap: 0.25rem;
-    }
-
-    .time-select-group .form-select-modern.time-select {
-        font-size: 0.95rem;
+        gap: 0.2rem;
     }
 }
 
 /* Responsividade: Dispositivos Móveis (Paisagem) */
 @media (min-width: 641px) and (max-width: 900px) and (orientation: landscape) {
     .form-card {
-        padding: 2rem 2.5rem;
+        padding: 1.5rem 2rem;
     }
 
     .form-title {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
 
     .form-input-modern,
     .form-select-modern {
-        padding: 0.8rem 1rem;
-        padding-left: 3rem;
-        font-size: 0.95rem;
-    }
-
-    .form-input-modern[type="date"] {
-        padding-left: 1rem;
+        padding: 0.7rem 0.9rem;
+        font-size: 0.9rem;
     }
 
     .form-button-modern {
-        padding: 1rem;
-        font-size: 1rem;
+        padding: 0.9rem;
+        font-size: 0.95rem;
     }
 
     .horarios-container {
-        gap: 1rem;
+        gap: 0.8rem;
     }
 }

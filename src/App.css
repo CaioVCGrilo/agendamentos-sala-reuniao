@@ -7,7 +7,7 @@
 .app-container {
     background-color: #f3f4f6; /* cinza claro */
     min-height: 100vh;
-    padding: 2rem;
+    padding: 0; /* REMOVIDO: Padding superior/inferior para remover o espaço em branco no topo e rodapé */
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,158 +20,85 @@
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     overflow: hidden;
     max-width: 80rem; /* 1280px */
-    margin: auto;
+    margin: 0 auto; /* Ajuste para remover a margem de topo/fundo */
 }
 
 /* Estilos para o Cabeçalho */
 .header {
     background-color: white;
-    padding: 1.5rem 2.5rem;
+    padding: 0.5rem 1.5rem; /* Reduzido o padding para o mínimo */
     border-bottom: 2px solid #e5e7eb;
 }
 
 .header-logo-container {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem; /* Ajuste no espaçamento */
 }
 
 .header-logo-container svg {
     color: #1f3a8a;
-    width: 3rem;
-    height: 3rem;
+    width: 2rem; /* Reduzindo o ícone */
+    height: 2rem;
     flex-shrink: 0;
 }
 
 .header-title {
-    font-size: 1.75rem;
+    font-size: 1.25rem; /* Reduzindo o tamanho da fonte */
     font-weight: 800;
     color: #1f3a8a;
     margin: 0;
 }
 
 .header-subtitle {
-    font-size: 1rem;
+    font-size: 0.75rem; /* Reduzindo o tamanho da fonte */
     color: #4b5563;
     margin: 0;
 }
 
 /* Formulário e Lista (conteúdo interno) */
 .content-section {
-    padding: 2rem;
+    padding: 1.5rem; /* Reduzido o padding geral */
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem; /* Reduzido o tamanho da fonte */
     font-weight: 700;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem; /* Reduzido a margem */
     color: #1f2937;
     border-bottom: 1px solid #e5e7eb;
     padding-bottom: 0.5rem;
 }
 
-/* Tabela */
-.table-container {
-    overflow-x: auto;
-    max-width: 100%;
-}
-
-.agendamentos-table {
-    width: 100%;
-    background-color: white;
-    border-collapse: collapse;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.agendamentos-table thead {
-    background-color: #f9fafb;
-}
-
-.agendamentos-table th {
-    padding: 0.75rem 1.5rem;
-    text-align: left;
-    color: #4b5563;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    line-height: 1.5;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.agendamentos-table tbody {
-    font-size: 0.875rem;
-    color: #374151;
-}
-
-.agendamentos-table td {
-    padding: 0.75rem 1.5rem;
-    border-bottom: 1px solid #e5e7eb;
-    white-space: nowrap;
-}
-
-.agendamentos-table tr:hover {
-    background-color: #f3f4f6;
-    transition: background-color 0.15s ease-in-out;
-}
-
-/* Estilo das tags de PC */
-.pc-tag {
-    display: inline-block;
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-}
-
-.pc-tag.blue {
-    background-color: #dbeafe;
-    color: #1e40af;
-}
-
-.pc-tag.purple {
-    background-color: #ede9fe;
-    color: #6d28d9;
-}
-
-.pc-tag.green {
-    background-color: #d1fae5;
-    color: #065f46;
-}
-
-.pc-tag.orange {
-    background-color: #fffbe6;
-    color: #a16207;
-}
-
-/* Estilo do formulário */
+/* Estilo do formulário (Formulario.css) */
 .form-card {
     background-color: white;
-    padding: 0.5rem 2.5rem 2.5rem 2.5rem;
+    padding: 1rem 1.5rem; /* Reduzido o padding */
     border-radius: 1rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem; /* Reduzido a margem inferior */
 }
 
 .form-title {
-    font-size: 1.5rem;
+    font-size: 1.25rem; /* Reduzido o tamanho da fonte */
     font-weight: 700;
-    margin-bottom: 1rem;
-    text-align: left;
+    margin-bottom: 0.75rem;
+    text-align: center;
     color: #1f3a8a;
     border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 1rem;
+    padding-bottom: 0.75rem;
 }
 
 .form-group-modern {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem; /* Reduzido a margem */
 }
 
 .form-label-modern {
     display: block;
-    color: #4b5563;
+    color: #374151;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem; /* Reduzido a margem */
+    font-size: 0.9rem;
 }
 
 .form-input-wrapper {
@@ -180,29 +107,39 @@
 
 .input-icon {
     position: absolute;
-    left: 1rem;
+    left: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1rem;
+    height: 1rem;
     color: #9ca3af;
 }
 
 .form-input-modern,
 .form-select-modern {
     width: 100%;
-    padding: 0.75rem 1rem 0.75rem 3rem;
+    padding: 0.6rem 0.8rem; /* Reduzido o padding para inputs */
+    padding-left: 2rem;
     border-radius: 0.5rem;
     border: 1px solid #d1d5db;
     transition: all 0.2s ease-in-out;
     outline: none;
     box-sizing: border-box;
+    font-size: 0.9rem;
+    color: #374151;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.form-input-modern[type="date"] {
+    padding-left: 0.8rem;
 }
 
 .form-input-modern:focus,
 .form-select-modern:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 .form-button-modern {
@@ -210,37 +147,66 @@
     background-image: linear-gradient(to right, #2563eb, #1e40af);
     color: white;
     font-weight: 700;
-    padding: 1rem;
+    padding: 0.8rem; /* Reduzido o padding */
     border-radius: 0.5rem;
     border: none;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    font-size: 0.95rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .form-button-modern:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 6px 10px -1px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.08);
 }
 
-.cancel-button {
-    background-color: #ef4444;
-    color: white;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+.horarios-container {
+    display: flex;
+    gap: 0.75rem; /* Reduzido o espaçamento */
+    margin-bottom: 0.75rem;
 }
 
-.cancel-button:hover {
-    background-color: #dc2626;
+.horarios-container .form-group-modern {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.time-select-group {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem; /* Reduzido o espaçamento entre os seletores */
+}
+
+.time-select-group .form-select-modern.time-select {
+    width: 50%;
+    padding: 0.6rem 0.8rem; /* Reduzido o padding */
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    background-color: transparent;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #374151;
+    transition: all 0.2s ease-in-out;
+}
+
+.time-select-group .form-select-modern.time-select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.time-select-group .separator {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #4b5563;
+    line-height: 1;
+    padding: 0 0.2rem;
 }
 
 /* Estilos para o Calendário */
 .calendar-container {
-    padding: 2rem;
+    padding: 1.5rem; /* Reduzido o padding */
     background-color: white;
     border-radius: 1rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -248,6 +214,7 @@
 
 .rbc-calendar {
     font-family: 'Inter', sans-serif;
+    height: 350px !important; /* Altura fixa para o iPad Air */
 }
 
 .rbc-header {
@@ -283,9 +250,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 2.5rem 2rem; /* Aumentar o padding vertical */
-    border-radius: 1.25rem; /* Bordas mais arredondadas */
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra mais profunda e suave */
+    padding: 2.5rem 2rem;
+    border-radius: 1.25rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     z-index: 1000;
     text-align: center;
     max-width: 90%;
@@ -295,21 +262,21 @@
 
 .event-details-popup h3 {
     color: #1f3a8a;
-    font-size: 1.5rem; /* Aumentar a fonte do título */
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 1.5rem; /* Mais espaço abaixo do título */
+    margin-bottom: 1.5rem;
 }
 
 .event-details-popup p {
-    margin: 1rem 0; /* Aumentar o espaçamento entre as linhas de texto */
+    margin: 1rem 0;
     color: #4b5563;
     font-size: 1rem;
     line-height: 1.5;
 }
 
 .event-details-popup p strong {
-    font-weight: 600; /* Deixar o texto em negrito, mas não tão pesado */
-    color: #1f2937; /* Cor mais escura para o texto importante */
+    font-weight: 600;
+    color: #1f2937;
 }
 
 .event-details-popup .button-group {
@@ -323,8 +290,8 @@
     background-color: #ef4444;
     color: white;
     font-weight: 600;
-    padding: 0.75rem 1.5rem; /* Aumentar o padding do botão */
-    border-radius: 0.625rem; /* Mais arredondado */
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.625rem;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -339,8 +306,8 @@
     background-color: #e5e7eb;
     color: #4b5563;
     font-weight: 600;
-    padding: 0.75rem 1.5rem; /* Aumentar o padding do botão */
-    border-radius: 0.625rem; /* Mais arredondado */
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.625rem;
     border: none;
     cursor: pointer;
     transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -494,29 +461,33 @@
 
 /* Ajustes para iPads (Retrato e Paisagem) e tablets maiores */
 @media (min-width: 768px) and (max-width: 1024px) {
+
+    body, html {
+        overflow: hidden; /* ou overflow-y: hidden; */
+        height: 100%;
+    }
+
     .app-container {
-        padding: 2rem 1rem; /* Ajusta o padding lateral */
+        padding: 0rem 0rem;
     }
 
     .main-card {
-        border-radius: 1.5rem; /* Um pouco mais arredondado para tablets */
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra mais destacada */
+        border-radius: 1.5rem;
     }
 
-    .header {
-        padding: 2rem 2.5rem; /* Aumenta o padding do cabeçalho */
-    }
-
-    .header-title {
-        font-size: 2rem; /* Aumenta o tamanho da fonte do título */
-    }
-
+    .header-title,
     .header-subtitle {
-        font-size: 1.1rem; /* Aumenta a fonte do subtítulo */
+        display: none; /* Oculta o título e o subtítulo */
+    }
+
+    .header-logo-container {
+        justify-content: center; /* Centraliza a logo quando o texto é removido */
+        width: 100%;
+        gap: 0;
     }
 
     .content-section {
-        padding: 2.5rem; /* Aumenta o padding da seção de conteúdo */
+        padding: 2.5rem;
     }
 
     /* Otimização do calendário para tablets */
@@ -525,12 +496,7 @@
     }
 
     .rbc-calendar {
-        height: 600px !important; /* Aumenta a altura do calendário para tablets */
-    }
-
-    /* Reduz o tamanho da fonte dos cabeçalhos do calendário */
-    .rbc-header {
-        font-size: 1rem;
+        height: 500px !important;
     }
 
     /* Melhora a leitura dos eventos */
