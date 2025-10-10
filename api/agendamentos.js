@@ -14,7 +14,7 @@ const pool = mysql.createPool({
 
 const LSEE_EXCEPTION_IP = '143.107.235.10';
 
-// A única sala de reunião
+// A única sala de reunião - essa constante não é mais necessária, mas pode ser mantida
 const SALA_REUNIAO = 'Sala de Reunião Única';
 
 async function autoDeleteOldReservations() {
@@ -74,12 +74,12 @@ export async function POST(request) {
     if (connectionError) return connectionError;
 
     try {
-        const { dataReserva, horaInicial, horaFinal, nome, pin, codigo_lsee } = await request.json();
+        const { data_inicio, hora_inicial, hora_final, agendado_por, pin, codigo_lsee } = await request.json();
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const requestDate = new Date(dataReserva + 'T00:00:00');
+        const requestDate = new Date(data_inicio + 'T00:00:00');
         requestDate.setHours(0, 0, 0, 0);
 
         if (requestDate < today) {
@@ -96,13 +96,12 @@ export async function POST(request) {
             isPinRequired = false;
         }
 
-        if (!dataReserva || !horaInicial || !horaFinal || !nome || (isPinRequired && !pin)) {
+        if (!data_inicio || !hora_inicial || !hora_final || !agendado_por || (isPinRequired && !pin)) {
             return NextResponse.json({ error: 'Dados incompletos. Todos os campos são obrigatórios.' }, { status: 400 });
         }
 
-        // Converte a data e horários para objetos Date para a comparação
-        const inicioReserva = new Date(`${dataReserva}T${horaInicial}`);
-        const fimReserva = new Date(`${dataReserva}T${horaFinal}`);
+        const inicioReserva = new Date(`${data_inicio}T${hora_inicial}`);
+        const fimReserva = new Date(`${data_inicio}T${hora_final}`);
 
         if (fimReserva <= inicioReserva) {
             return NextResponse.json(
@@ -119,7 +118,7 @@ export async function POST(request) {
                 ( (hora_inicial < ? AND hora_final > ?) OR (hora_inicial = ? AND hora_final = ?) );
         `;
 
-        const [conflicts] = await pool.execute(conflictQuery, [dataReserva, horaFinal, horaInicial, horaInicial, horaFinal]);
+        const [conflicts] = await pool.execute(conflictQuery, [data_inicio, hora_final, hora_inicial, hora_inicial, hora_final]);
 
         if (conflicts.length > 0) {
             const conflito = conflicts[0];
@@ -150,7 +149,7 @@ export async function POST(request) {
             ) VALUES (?, ?, ?, ?, ?);
         `;
 
-        const [result] = await pool.execute(insertQuery, [dataReserva, horaInicial, horaFinal, nome, hashedPin]);
+        const [result] = await pool.execute(insertQuery, [data_inicio, hora_inicial, hora_final, agendado_por, hashedPin]);
 
         return NextResponse.json({
             message: 'Agendamento criado com sucesso!',
@@ -176,12 +175,11 @@ export async function GET(request) {
                  DATE_FORMAT(data_inicio, '%Y-%m-%d') AS data_inicio,
                  hora_inicial,
                  hora_final,
-                 agendado_por,
-                 ? as pc_numero
+                 agendado_por
              FROM agendamentos_sala_reuniao
              WHERE data_inicio >= ?
              ORDER BY data_inicio ASC, hora_inicial ASC;`,
-            [SALA_REUNIAO, today]
+            [today]
         );
 
         return NextResponse.json(agendamentos, { status: 200 });

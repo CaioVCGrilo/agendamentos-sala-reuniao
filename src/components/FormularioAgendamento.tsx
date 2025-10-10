@@ -4,12 +4,12 @@
 import React, { useState, useEffect } from 'react';
 import './Formulario.css';
 
-// Função para gerar as opções de hora (00 a 23)
+// ... (Funções e interfaces de geração de opções de tempo permanecem as mesmas)
+
 const gerarOpcoesHora = () => {
     return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
 };
 
-// Função para gerar as opções de minuto (00, 15, 30, 45)
 const gerarOpcoesMinuto = () => {
     return ['00', '15', '30', '45'];
 };
@@ -23,7 +23,7 @@ interface Agendamento {
     hora_inicial: string;
     hora_final: string;
     agendado_por: string;
-    pc_numero: string;
+    // Removido pc_numero da interface Agendamento, já que não é mais necessário
 }
 
 const getTodayDate = () => {
@@ -56,7 +56,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
     const [opcoesHoraFinalDisponiveis, setOpcoesHoraFinalDisponiveis] = useState(OPCOES_HORA);
     const [opcoesMinutoFinalDisponiveis, setOpcoesMinutoFinalDisponiveis] = useState(OPCOES_MINUTO);
 
-    // Lógica para filtrar horários iniciais que já passaram
     useEffect(() => {
         const today = new Date();
         const currentHour = today.getHours();
@@ -76,14 +75,12 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         setOpcoesHoraInicialDisponiveis(filteredHours);
         setOpcoesMinutoInicialDisponiveis(filteredMinutes);
 
-        // Ajusta o valor inicial se o horário anterior não estiver mais disponível
         if (isToday && parseInt(horaInicial) < currentHour) {
             setHoraInicial(String(currentHour).padStart(2, '0'));
             setMinutoInicial(String(Math.ceil((currentMinute + 1) / 15) * 15).padStart(2, '0'));
         }
     }, [dataReserva, horaInicial]);
 
-    // Lógica para filtrar horários finais que sejam maiores que o horário inicial
     useEffect(() => {
         const horaInicialNum = parseInt(horaInicial);
         const minutoInicialNum = parseInt(minutoInicial);
@@ -91,10 +88,8 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         let filteredHours = OPCOES_HORA.filter(h => parseInt(h) >= horaInicialNum);
         let filteredMinutes = OPCOES_MINUTO;
 
-        // Se a hora inicial for igual à hora final, os minutos finais devem ser maiores
         if (parseInt(horaFinal) === horaInicialNum) {
             filteredMinutes = OPCOES_MINUTO.filter(m => parseInt(m) > minutoInicialNum);
-            // Se o minuto selecionado não estiver mais disponível, ajuste para o próximo
             if (parseInt(minutoFinal) <= minutoInicialNum && filteredMinutes.length > 0) {
                 setMinutoFinal(filteredMinutes[0]);
             }
@@ -103,7 +98,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         setOpcoesHoraFinalDisponiveis(filteredHours);
         setOpcoesMinutoFinalDisponiveis(filteredMinutes);
 
-        // Garantir que a hora final seja sempre maior ou igual à inicial
         if (parseInt(horaFinal) < horaInicialNum) {
             setHoraFinal(horaInicial);
             setMinutoFinal(minutoInicial);
@@ -111,11 +105,11 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
     }, [horaInicial, minutoInicial, horaFinal, minutoFinal]);
 
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
+        // Objeto a ser enviado, sem a propriedade pc_numero
         const novoAgendamento = {
             data_inicio: dataReserva,
             hora_inicial: `${horaInicial}:${minutoInicial}`,
