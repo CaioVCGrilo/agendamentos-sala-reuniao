@@ -1,9 +1,22 @@
+// src/components/FormularioAgendamento.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import './Formulario.css';
 import { calcularDataTermino } from './utils';
 
+// Função para gerar as opções de hora (00 a 23)
+const gerarOpcoesHora = () => {
+    return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
+};
+
+// Função para gerar as opções de minuto (00, 15, 30, 45)
+const gerarOpcoesMinuto = () => {
+    return ['00', '15', '30', '45'];
+};
+
+const OPCOES_HORA = gerarOpcoesHora();
+const OPCOES_MINUTO = gerarOpcoesMinuto();
 
 interface Agendamento {
     id: number;
@@ -28,30 +41,74 @@ interface FormularioAgendamentoProps {
 
 export default function FormularioAgendamento({ onAgendamentoSucesso }: FormularioAgendamentoProps) {
     const [dataReserva, setDataReserva] = useState(getTodayDate());
-    const [horaInicial, setHoraInicial] = useState('08:00');
-    const [horaFinal, setHoraFinal] = useState('09:00');
+
+    // Separamos o estado para hora e minuto de inicio e fim
+    const [horaInicial, setHoraInicial] = useState('08');
+    const [minutoInicial, setMinutoInicial] = useState('00');
+    const [horaFinal, setHoraFinal] = useState('09');
+    const [minutoFinal, setMinutoFinal] = useState('00');
+
     const [nome, setNome] = useState('');
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Simplificamos a lógica de disponibilidade, já que o backend vai lidar com o conflito
     const [disponivel, setDisponivel] = useState(true);
 
+    const [opcoesHoraDisponiveis, setOpcoesHoraDisponiveis] = useState(OPCOES_HORA);
+    const [opcoesMinutoDisponiveis, setOpcoesMinutoDisponiveis] = useState(OPCOES_MINUTO);
+
     useEffect(() => {
-        // Validação básica de horários no frontend
-        setDisponivel(horaFinal > horaInicial);
-    }, [horaInicial, horaFinal]);
+        // Validação básica: converte para string para comparar
+        const inicio = `${horaInicial}:${minutoInicial}`;
+        const fim = `${horaFinal}:${minutoFinal}`;
+        setDisponivel(fim > inicio);
+    }, [horaInicial, minutoInicial, horaFinal, minutoFinal]);
+
+    // Lógica para filtrar horários passados
+    useEffect(() => {
+        const today = new Date();
+        const currentHour = today.getHours();
+        const currentMinute = today.getMinutes();
+
+        const isToday = dataReserva === getTodayDate();
+
+        let filteredHours = OPCOES_HORA;
+        let filteredMinutes = OPCOES_MINUTO;
+
+        if (isToday) {
+            filteredHours = OPCOES_HORA.filter(h => parseInt(h) >= currentHour);
+            setOpcoesHoraDisponiveis(filteredHours);
+
+            if (parseInt(horaInicial) === currentHour) {
+                const currentMinuteInterval = Math.ceil((currentMinute + 1) / 15) * 15;
+                filteredMinutes = OPCOES_MINUTO.filter(m => parseInt(m) >= currentMinuteInterval);
+                setOpcoesMinutoDisponiveis(filteredMinutes);
+            } else {
+                setOpcoesMinutoDisponiveis(OPCOES_MINUTO);
+            }
+        } else {
+            setOpcoesHoraDisponiveis(OPCOES_HORA);
+            setOpcoesMinutoDisponiveis(OPCOES_MINUTO);
+        }
+
+        // Ajusta o valor inicial se o horário anterior não estiver mais disponível
+        if (isToday && parseInt(horaInicial) < currentHour) {
+            setHoraInicial(String(currentHour).padStart(2, '0'));
+            setMinutoInicial(String(Math.ceil((currentMinute + 1) / 15) * 15).padStart(2, '0'));
+        }
+    }, [dataReserva, horaInicial]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         const novoAgendamento = {
-            dataReserva,
-            horaInicial,
-            horaFinal,
-            nome,
-            pin
+            data_inicio: dataReserva,
+            hora_inicial: `${horaInicial}:${minutoInicial}`,
+            hora_final: `${horaFinal}:${minutoFinal}`,
+            agendado_por: nome,
+            pin: pin
         };
 
         try {
@@ -69,8 +126,10 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                 alert('Agendamento criado com sucesso!');
                 onAgendamentoSucesso();
                 setDataReserva(getTodayDate());
-                setHoraInicial('08:00');
-                setHoraFinal('09:00');
+                setHoraInicial('08');
+                setMinutoInicial('00');
+                setHoraFinal('09');
+                setMinutoFinal('00');
                 setNome('');
                 setPin('');
             } else if (response.status === 409) {
@@ -111,31 +170,55 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             </div>
             <div className="horarios-container">
                 <div className="form-group-modern horario-item">
-                    <label htmlFor="horaInicial" className="form-label-modern">Horário Inicial</label>
-                    <div className="form-input-wrapper">
-                        <input
-                            type="time"
-                            id="horaInicial"
+                    <label className="form-label-modern">Horário Inicial</label>
+                    <div className="time-select-group">
+                        <select
                             value={horaInicial}
                             onChange={(e) => setHoraInicial(e.target.value)}
-                            className="form-input-modern"
+                            className="form-input-modern time-select"
                             required
-                            step="900"
-                        />
+                        >
+                            {opcoesHoraDisponiveis.map(hora => (
+                                <option key={hora} value={hora}>{hora}</option>
+                            ))}
+                        </select>
+                        <span className="separator">:</span>
+                        <select
+                            value={minutoInicial}
+                            onChange={(e) => setMinutoInicial(e.target.value)}
+                            className="form-input-modern time-select"
+                            required
+                        >
+                            {opcoesMinutoDisponiveis.map(minuto => (
+                                <option key={minuto} value={minuto}>{minuto}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
                 <div className="form-group-modern horario-item">
-                    <label htmlFor="horaFinal" className="form-label-modern">Horário Final</label>
-                    <div className="form-input-wrapper">
-                        <input
-                            type="time"
-                            id="horaFinal"
+                    <label className="form-label-modern">Horário Final</label>
+                    <div className="time-select-group">
+                        <select
                             value={horaFinal}
                             onChange={(e) => setHoraFinal(e.target.value)}
-                            className="form-input-modern"
+                            className="form-input-modern time-select"
                             required
-                            step="900"
-                        />
+                        >
+                            {OPCOES_HORA.map(hora => (
+                                <option key={hora} value={hora}>{hora}</option>
+                            ))}
+                        </select>
+                        <span className="separator">:</span>
+                        <select
+                            value={minutoFinal}
+                            onChange={(e) => setMinutoFinal(e.target.value)}
+                            className="form-input-modern time-select"
+                            required
+                        >
+                            {OPCOES_MINUTO.map(minuto => (
+                                <option key={minuto} value={minuto}>{minuto}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
             </div>
