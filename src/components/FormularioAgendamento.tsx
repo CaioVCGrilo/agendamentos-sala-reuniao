@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import './Formulario.css';
+import { calcularDataTermino } from './utils';
+
 
 interface Agendamento {
     id: number;
@@ -90,7 +92,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             setLoading(false);
         }
     };
-
     return (
         <form onSubmit={handleSubmit} className="form-card">
             <h2 className="form-title">Reservar Sala de Reunião</h2>
@@ -119,6 +120,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             onChange={(e) => setHoraInicial(e.target.value)}
                             className="form-input-modern"
                             required
+                            step="900"
                         />
                     </div>
                 </div>
@@ -132,10 +134,12 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             onChange={(e) => setHoraFinal(e.target.value)}
                             className="form-input-modern"
                             required
+                            step="900"
                         />
                     </div>
                 </div>
             </div>
+            {/* ... (O restante do formulário permanece o mesmo) */}
             <div className="form-group-modern">
                 <label htmlFor="nome" className="form-label-modern">Agendado por</label>
                 <div className="form-input-wrapper">
@@ -165,9 +169,9 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             <button
                 type="submit"
                 className="form-button-modern"
-                disabled={!disponivel || loading}
+                disabled={!disponivel}
             >
-                {loading ? 'Agendando...' : 'Confirmar Agendamento'}
+                {disponivel ? 'Confirmar Agendamento' : 'Horário Ocupado'}
             </button>
         </form>
     );
