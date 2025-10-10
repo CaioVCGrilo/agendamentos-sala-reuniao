@@ -7,11 +7,12 @@
 .app-container {
     background-color: #f3f4f6; /* cinza claro */
     min-height: 100vh;
-    padding: 0; /* REMOVIDO: Padding superior/inferior para remover o espaço em branco no topo e rodapé */
+    padding: 2rem;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 
 /* Container principal (o "card" branco) */
 .main-card {
@@ -26,39 +27,39 @@
 /* Estilos para o Cabeçalho */
 .header {
     background-color: white;
-    padding: 0.5rem 1.5rem; /* Reduzido o padding para o mínimo */
+    padding: 1.5rem 2.5rem;
     border-bottom: 2px solid #e5e7eb;
 }
 
 .header-logo-container {
     display: flex;
     align-items: center;
-    gap: 1rem; /* Ajuste no espaçamento */
+    gap: 1.5rem;
 }
 
 .header-logo-container svg {
     color: #1f3a8a;
-    width: 2rem; /* Reduzindo o ícone */
-    height: 2rem;
+    width: 3rem;
+    height: 3rem;
     flex-shrink: 0;
 }
 
 .header-title {
-    font-size: 1.25rem; /* Reduzindo o tamanho da fonte */
+    font-size: 1.75rem;
     font-weight: 800;
     color: #1f3a8a;
     margin: 0;
 }
 
 .header-subtitle {
-    font-size: 0.75rem; /* Reduzindo o tamanho da fonte */
+    font-size: 1rem;
     color: #4b5563;
     margin: 0;
 }
 
 /* Formulário e Lista (conteúdo interno) */
 .content-section {
-    padding: 1.5rem; /* Reduzido o padding geral */
+    padding: 2rem;
 }
 
 .section-title {
@@ -80,13 +81,13 @@
 }
 
 .form-title {
-    font-size: 1.25rem; /* Reduzido o tamanho da fonte */
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 0.75rem;
-    text-align: center;
+    margin-bottom: 1rem;
+    text-align: left;
     color: #1f3a8a;
     border-bottom: 2px solid #e5e7eb;
-    padding-bottom: 0.75rem;
+    padding-bottom: 1rem;
 }
 
 .form-group-modern {
