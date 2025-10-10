@@ -5,7 +5,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import '../App.css'; // Importe o CSS para estilização
+import '../App.css';
 
 interface EventoCalendario {
     id: number;
@@ -70,7 +70,7 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
 
         return {
             id: agendamento.id,
-            title: `${agendamento.pc_numero} - ${agendamento.agendado_por}`,
+            title: `${agendamento.agendado_por}`, // Título do evento agora exibe apenas o nome
             start: dataInicio,
             end: dataFim,
             resource: agendamento,
@@ -104,7 +104,6 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
             {selectedEvent && (
                 <div className="event-details-popup">
                     <h3>Detalhes do Agendamento</h3>
-                    <p>Sala: <strong>{selectedEvent.resource.pc_numero}</strong></p>
                     <p>Reservado por: <strong>{selectedEvent.resource.agendado_por}</strong></p>
                     <p>Início: <strong>{format(selectedEvent.start, 'dd/MM/yyyy HH:mm')}</strong></p>
                     <p>Término: <strong>{format(selectedEvent.end, 'dd/MM/yyyy HH:mm')}</strong></p>
