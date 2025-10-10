@@ -3,7 +3,6 @@
 
 import React, { useState, useEffect } from 'react';
 import './Formulario.css';
-import { calcularDataTermino } from './utils';
 
 // Função para gerar as opções de hora (00 a 23)
 const gerarOpcoesHora = () => {
@@ -41,35 +40,27 @@ interface FormularioAgendamentoProps {
 
 export default function FormularioAgendamento({ onAgendamentoSucesso }: FormularioAgendamentoProps) {
     const [dataReserva, setDataReserva] = useState(getTodayDate());
-
-    // Separamos o estado para hora e minuto de inicio e fim
     const [horaInicial, setHoraInicial] = useState('08');
     const [minutoInicial, setMinutoInicial] = useState('00');
     const [horaFinal, setHoraFinal] = useState('09');
     const [minutoFinal, setMinutoFinal] = useState('00');
-
     const [nome, setNome] = useState('');
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
 
     const [disponivel, setDisponivel] = useState(true);
 
-    const [opcoesHoraDisponiveis, setOpcoesHoraDisponiveis] = useState(OPCOES_HORA);
-    const [opcoesMinutoDisponiveis, setOpcoesMinutoDisponiveis] = useState(OPCOES_MINUTO);
+    const [opcoesHoraInicialDisponiveis, setOpcoesHoraInicialDisponiveis] = useState(OPCOES_HORA);
+    const [opcoesMinutoInicialDisponiveis, setOpcoesMinutoInicialDisponiveis] = useState(OPCOES_MINUTO);
 
-    useEffect(() => {
-        // Validação básica: converte para string para comparar
-        const inicio = `${horaInicial}:${minutoInicial}`;
-        const fim = `${horaFinal}:${minutoFinal}`;
-        setDisponivel(fim > inicio);
-    }, [horaInicial, minutoInicial, horaFinal, minutoFinal]);
+    const [opcoesHoraFinalDisponiveis, setOpcoesHoraFinalDisponiveis] = useState(OPCOES_HORA);
+    const [opcoesMinutoFinalDisponiveis, setOpcoesMinutoFinalDisponiveis] = useState(OPCOES_MINUTO);
 
-    // Lógica para filtrar horários passados
+    // Lógica para filtrar horários iniciais que já passaram
     useEffect(() => {
         const today = new Date();
         const currentHour = today.getHours();
         const currentMinute = today.getMinutes();
-
         const isToday = dataReserva === getTodayDate();
 
         let filteredHours = OPCOES_HORA;
@@ -77,19 +68,13 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
         if (isToday) {
             filteredHours = OPCOES_HORA.filter(h => parseInt(h) >= currentHour);
-            setOpcoesHoraDisponiveis(filteredHours);
-
             if (parseInt(horaInicial) === currentHour) {
                 const currentMinuteInterval = Math.ceil((currentMinute + 1) / 15) * 15;
                 filteredMinutes = OPCOES_MINUTO.filter(m => parseInt(m) >= currentMinuteInterval);
-                setOpcoesMinutoDisponiveis(filteredMinutes);
-            } else {
-                setOpcoesMinutoDisponiveis(OPCOES_MINUTO);
             }
-        } else {
-            setOpcoesHoraDisponiveis(OPCOES_HORA);
-            setOpcoesMinutoDisponiveis(OPCOES_MINUTO);
         }
+        setOpcoesHoraInicialDisponiveis(filteredHours);
+        setOpcoesMinutoInicialDisponiveis(filteredMinutes);
 
         // Ajusta o valor inicial se o horário anterior não estiver mais disponível
         if (isToday && parseInt(horaInicial) < currentHour) {
@@ -97,6 +82,34 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             setMinutoInicial(String(Math.ceil((currentMinute + 1) / 15) * 15).padStart(2, '0'));
         }
     }, [dataReserva, horaInicial]);
+
+    // Lógica para filtrar horários finais que sejam maiores que o horário inicial
+    useEffect(() => {
+        const horaInicialNum = parseInt(horaInicial);
+        const minutoInicialNum = parseInt(minutoInicial);
+
+        let filteredHours = OPCOES_HORA.filter(h => parseInt(h) >= horaInicialNum);
+        let filteredMinutes = OPCOES_MINUTO;
+
+        // Se a hora inicial for igual à hora final, os minutos finais devem ser maiores
+        if (parseInt(horaFinal) === horaInicialNum) {
+            filteredMinutes = OPCOES_MINUTO.filter(m => parseInt(m) > minutoInicialNum);
+            // Se o minuto selecionado não estiver mais disponível, ajuste para o próximo
+            if (parseInt(minutoFinal) <= minutoInicialNum && filteredMinutes.length > 0) {
+                setMinutoFinal(filteredMinutes[0]);
+            }
+        }
+
+        setOpcoesHoraFinalDisponiveis(filteredHours);
+        setOpcoesMinutoFinalDisponiveis(filteredMinutes);
+
+        // Garantir que a hora final seja sempre maior ou igual à inicial
+        if (parseInt(horaFinal) < horaInicialNum) {
+            setHoraFinal(horaInicial);
+            setMinutoFinal(minutoInicial);
+        }
+
+    }, [horaInicial, minutoInicial, horaFinal, minutoFinal]);
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -178,7 +191,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             className="form-input-modern time-select"
                             required
                         >
-                            {opcoesHoraDisponiveis.map(hora => (
+                            {opcoesHoraInicialDisponiveis.map(hora => (
                                 <option key={hora} value={hora}>{hora}</option>
                             ))}
                         </select>
@@ -189,7 +202,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             className="form-input-modern time-select"
                             required
                         >
-                            {opcoesMinutoDisponiveis.map(minuto => (
+                            {opcoesMinutoInicialDisponiveis.map(minuto => (
                                 <option key={minuto} value={minuto}>{minuto}</option>
                             ))}
                         </select>
@@ -204,7 +217,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             className="form-input-modern time-select"
                             required
                         >
-                            {OPCOES_HORA.map(hora => (
+                            {opcoesHoraFinalDisponiveis.map(hora => (
                                 <option key={hora} value={hora}>{hora}</option>
                             ))}
                         </select>
@@ -215,7 +228,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                             className="form-input-modern time-select"
                             required
                         >
-                            {OPCOES_MINUTO.map(minuto => (
+                            {opcoesMinutoFinalDisponiveis.map(minuto => (
                                 <option key={minuto} value={minuto}>{minuto}</option>
                             ))}
                         </select>
@@ -254,7 +267,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                 className="form-button-modern"
                 disabled={!disponivel}
             >
-                {disponivel ? 'Confirmar Agendamento' : 'Horário Ocupado'}
+                {disponivel ? 'Confirmar Agendamento' : 'Horário Inválido'}
             </button>
         </form>
     );
