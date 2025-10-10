@@ -1,10 +1,9 @@
-// src/components/FormularioAgendamento.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
+// Importe os ícones diretamente do react-icons
+import { BsCalendarDate, BsClock, BsPerson, BsLock } from 'react-icons/bs';
 import './Formulario.css';
-
-// ... (Funções e interfaces de geração de opções de tempo permanecem as mesmas)
 
 const gerarOpcoesHora = () => {
     return Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
@@ -23,7 +22,6 @@ interface Agendamento {
     hora_inicial: string;
     hora_final: string;
     agendado_por: string;
-    // Removido pc_numero da interface Agendamento, já que não é mais necessário
 }
 
 const getTodayDate = () => {
@@ -47,12 +45,10 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
     const [nome, setNome] = useState('');
     const [pin, setPin] = useState('');
     const [loading, setLoading] = useState(false);
-
     const [disponivel, setDisponivel] = useState(true);
 
     const [opcoesHoraInicialDisponiveis, setOpcoesHoraInicialDisponiveis] = useState(OPCOES_HORA);
     const [opcoesMinutoInicialDisponiveis, setOpcoesMinutoInicialDisponiveis] = useState(OPCOES_MINUTO);
-
     const [opcoesHoraFinalDisponiveis, setOpcoesHoraFinalDisponiveis] = useState(OPCOES_HORA);
     const [opcoesMinutoFinalDisponiveis, setOpcoesMinutoFinalDisponiveis] = useState(OPCOES_MINUTO);
 
@@ -109,7 +105,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         e.preventDefault();
         setLoading(true);
 
-        // Objeto a ser enviado, sem a propriedade pc_numero
         const novoAgendamento = {
             data_inicio: dataReserva,
             hora_inicial: `${horaInicial}:${minutoInicial}`,
@@ -158,12 +153,15 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             setLoading(false);
         }
     };
+
     return (
         <form onSubmit={handleSubmit} className="form-card">
             <h2 className="form-title">Reservar Sala de Reunião</h2>
             <div className="form-group-modern">
                 <label htmlFor="dataReserva" className="form-label-modern">Data da Reserva</label>
                 <div className="form-input-wrapper">
+                    {/* Ícone dentro do wrapper para posicionamento */}
+
                     <input
                         type="date"
                         id="dataReserva"
@@ -177,7 +175,9 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             </div>
             <div className="horarios-container">
                 <div className="form-group-modern horario-item">
-                    <label className="form-label-modern">Horário Inicial</label>
+                    <label className="form-label-modern">
+                        Horário Inicial
+                    </label>
                     <div className="time-select-group">
                         <select
                             value={horaInicial}
@@ -203,7 +203,9 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                     </div>
                 </div>
                 <div className="form-group-modern horario-item">
-                    <label className="form-label-modern">Horário Final</label>
+                    <label className="form-label-modern">
+                        Horário Final
+                    </label>
                     <div className="time-select-group">
                         <select
                             value={horaFinal}
@@ -229,10 +231,11 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                     </div>
                 </div>
             </div>
-            {/* ... (O restante do formulário permanece o mesmo) */}
             <div className="form-group-modern">
                 <label htmlFor="nome" className="form-label-modern">Agendado por</label>
                 <div className="form-input-wrapper">
+                    {/* Ícone dentro do wrapper para posicionamento */}
+                    {BsPerson({ className: "input-icon" })}
                     <input
                         type="text"
                         id="nome"
@@ -246,6 +249,8 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             <div className="form-group-modern">
                 <label htmlFor="pin" className="form-label-modern">PIN para agendar e cancelar</label>
                 <div className="form-input-wrapper">
+                    {/* Ícone dentro do wrapper para posicionamento */}
+                    {BsLock({ className: "input-icon" })}
                     <input
                         type="text"
                         id="pin"

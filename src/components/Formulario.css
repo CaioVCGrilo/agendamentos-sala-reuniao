@@ -72,7 +72,7 @@ body {
 }
 
 .form-input-modern[type="date"] {
-    padding-left: 1rem; /* Ajustado para o input de data */
+    padding-left: 2.5rem; /* Ajustado para o input de data */
 }
 
 .form-input-modern:focus,

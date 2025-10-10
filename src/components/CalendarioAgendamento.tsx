@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import { format, parse, startOfWeek, getDay } from 'date-fns';
-import ptBR from 'date-fns/locale/pt-BR';
+import { format, parse, startOfWeek, getDay, addMonths, subMonths } from 'date-fns';
+import * as dateFnsLocales from 'date-fns/locale';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../App.css';
 
@@ -27,7 +27,7 @@ interface Agendamento {
 
 // Configuração de localização para pt-BR
 const locales = {
-    'pt-BR': ptBR,
+    'pt-BR': dateFnsLocales.ptBR,
 };
 
 const localizer = dateFnsLocalizer({
@@ -61,6 +61,7 @@ interface CalendarioAgendamentoProps {
 
 export default function CalendarioAgendamento({ agendamentos, onCancelamento }: CalendarioAgendamentoProps) {
     const [selectedEvent, setSelectedEvent] = useState<EventoCalendario | null>(null);
+    const [currentDate, setCurrentDate] = useState(new Date());
 
     const eventos = agendamentos.map(agendamento => {
         const dataInicio = new Date(`${agendamento.data_inicio}T${agendamento.hora_inicial}`);
@@ -70,7 +71,7 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
 
         return {
             id: agendamento.id,
-            title: `${agendamento.agendado_por}`, // Título do evento agora exibe apenas o nome
+            title: `${agendamento.agendado_por}`,
             start: dataInicio,
             end: dataFim,
             resource: agendamento,
@@ -90,16 +91,30 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
 
     return (
         <div className="calendar-container">
+            {/* Barra de navegação personalizada */}
+            <div className="custom-toolbar">
+                <button onClick={() => setCurrentDate(subMonths(currentDate, 1))}>
+                    &lt;
+                </button>
+                <span>{format(currentDate, 'MMMM yyyy', { locale: dateFnsLocales.ptBR })}</span>
+                <button onClick={() => setCurrentDate(addMonths(currentDate, 1))}>
+                    &gt;
+                </button>
+            </div>
+
             <Calendar
                 localizer={localizer}
                 events={eventos}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: '500px' }}
-                messages={messages} // Usando o objeto de mensagens traduzido
+                messages={messages}
                 onSelectEvent={handleSelectEvent}
                 selectable={false}
                 eventPropGetter={eventPropGetter}
+                toolbar={false} // Oculta a barra de ferramentas padrão
+                date={currentDate}
+                onNavigate={(newDate) => setCurrentDate(newDate)}
             />
             {selectedEvent && (
                 <div className="event-details-popup">
