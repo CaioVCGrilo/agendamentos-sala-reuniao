@@ -283,42 +283,72 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 2.5rem 2rem; /* Aumentar o padding vertical */
+    border-radius: 1.25rem; /* Bordas mais arredondadas */
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Sombra mais profunda e suave */
     z-index: 1000;
     text-align: center;
     max-width: 90%;
     width: 400px;
+    font-family: 'Inter', sans-serif;
 }
 
 .event-details-popup h3 {
     color: #1f3a8a;
-    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Aumentar a fonte do título */
+    font-weight: 700;
+    margin-bottom: 1.5rem; /* Mais espaço abaixo do título */
 }
 
 .event-details-popup p {
-    margin: 0.5rem 0;
+    margin: 1rem 0; /* Aumentar o espaçamento entre as linhas de texto */
     color: #4b5563;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.event-details-popup p strong {
+    font-weight: 600; /* Deixar o texto em negrito, mas não tão pesado */
+    color: #1f2937; /* Cor mais escura para o texto importante */
+}
+
+.event-details-popup .button-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 .event-details-popup .cancel-button {
-    margin-right: 0.5rem;
+    background-color: #ef4444;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem; /* Aumentar o padding do botão */
+    border-radius: 0.625rem; /* Mais arredondado */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.event-details-popup .cancel-button:hover {
+    background-color: #dc2626;
+    transform: translateY(-2px);
 }
 
 .close-popup-button {
     background-color: #e5e7eb;
     color: #4b5563;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem; /* Aumentar o padding do botão */
+    border-radius: 0.625rem; /* Mais arredondado */
     border: none;
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
 .close-popup-button:hover {
     background-color: #d1d5db;
+    transform: translateY(-2px);
 }
 
 /* Overlay para escurecer o fundo */

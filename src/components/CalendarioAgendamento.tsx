@@ -104,19 +104,28 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
             {selectedEvent && (
                 <div className="event-details-popup">
                     <h3>Detalhes do Agendamento</h3>
-                    <p>Sala: **{selectedEvent.resource.pc_numero}**</p>
-                    <p>Reservado por: **{selectedEvent.resource.agendado_por}**</p>
-                    <p>Início: **{format(selectedEvent.start, 'dd/MM/yyyy HH:mm')}**</p>
-                    <p>Término: **{format(selectedEvent.end, 'dd/MM/yyyy HH:mm')}**</p>
-                    <button onClick={() => {
-                        onCancelamento(selectedEvent.id);
-                        setSelectedEvent(null);
-                    }} className="cancel-button">
-                        Cancelar Agendamento
-                    </button>
-                    <button onClick={() => setSelectedEvent(null)} className="close-popup-button">
-                        Fechar
-                    </button>
+                    <p>Sala: <strong>{selectedEvent.resource.pc_numero}</strong></p>
+                    <p>Reservado por: <strong>{selectedEvent.resource.agendado_por}</strong></p>
+                    <p>Início: <strong>{format(selectedEvent.start, 'dd/MM/yyyy HH:mm')}</strong></p>
+                    <p>Término: <strong>{format(selectedEvent.end, 'dd/MM/yyyy HH:mm')}</strong></p>
+
+                    <div className="button-group">
+                        <button
+                            onClick={() => {
+                                onCancelamento(selectedEvent.id);
+                                setSelectedEvent(null);
+                            }}
+                            className="cancel-button"
+                        >
+                            Cancelar Agendamento
+                        </button>
+                        <button
+                            onClick={() => setSelectedEvent(null)}
+                            className="close-popup-button"
+                        >
+                            Fechar
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
