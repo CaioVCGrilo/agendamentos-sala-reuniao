@@ -467,6 +467,10 @@
         height: 100%;
     }
 
+    .header{
+        display: none;
+    }
+
     .app-container {
         padding: 0rem 0rem;
     }

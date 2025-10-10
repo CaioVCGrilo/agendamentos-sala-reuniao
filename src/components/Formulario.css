@@ -192,21 +192,25 @@ body {
     }
 
     .form-title {
-        font-size: 1.4rem;
+        font-size: 1.6rem; /* Fonte um pouco maior para o título */
+    }
+
+    .form-label-modern {
+        font-size: 1rem; /* Aumenta a fonte dos rótulos */
     }
 
     .form-input-modern,
     .form-select-modern {
-        padding: 0.7rem 0.9rem;
-        font-size: 0.9rem;
+        padding: 0.8rem 1rem; /* Aumenta o padding para melhor toque */
+        font-size: 1rem; /* Aumenta a fonte dos inputs */
     }
 
     .form-button-modern {
-        padding: 0.9rem;
-        font-size: 0.95rem;
+        padding: 1rem; /* Aumenta o padding do botão */
+        font-size: 1.05rem; /* Aumenta a fonte do botão */
     }
 
     .horarios-container {
-        gap: 0.8rem;
+        gap: 1rem; /* Aumenta o espaçamento entre os campos de horário */
     }
 }
