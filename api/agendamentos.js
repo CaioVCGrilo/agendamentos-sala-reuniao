@@ -100,6 +100,26 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Dados incompletos. Todos os campos são obrigatórios.' }, { status: 400 });
         }
 
+        // Validação robusta de hora/minuto
+        function horaValida(hora) {
+            if (!hora || typeof hora !== 'string') return false;
+            const partes = hora.split(':');
+            if (partes.length !== 2) return false;
+            const h = Number(partes[0]);
+            const m = Number(partes[1]);
+            return (
+                Number.isInteger(h) && Number.isInteger(m) &&
+                h >= 0 && h <= 23 &&
+                m >= 0 && m <= 59
+            );
+        }
+        if (!horaValida(hora_inicial) || !horaValida(hora_final)) {
+            return NextResponse.json(
+                { error: 'Horário inválido. Hora deve ser entre 00:00 e 23:59.' },
+                { status: 400 }
+            );
+        }
+
         const inicioReserva = new Date(`${data_inicio}T${hora_inicial}`);
         const fimReserva = new Date(`${data_inicio}T${hora_final}`);
 
