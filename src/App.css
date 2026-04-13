@@ -637,13 +637,27 @@
         min-width: 0;
     }
     .event-details-popup {
-        left: 0 !important;
-        right: 0 !important;
-        width: 95vw !important;
-        max-width: 95vw !important;
+        position: fixed;
+        top: 10vh !important;
+        left: 50% !important;
+        transform: translate(-50%, 0) !important;
+        width: 96vw !important;
+        max-width: 96vw !important;
         min-width: unset !important;
-        font-size: 0.9rem;
-        padding: 0.5rem;
+        font-size: 0.95rem;
+        padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+        border-radius: 0.75rem;
+        box-sizing: border-box;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    .event-details-popup h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+    }
+    .event-details-popup p {
+        margin: 0.5rem 0;
+        font-size: 0.95rem;
     }
     .button-group {
         flex-direction: column;
@@ -653,5 +667,48 @@
         font-size: 0.95rem;
         padding: 0.5rem 0.5rem;
         width: 100%;
+    }
+}
+
+/* Estilos para a barra inferior do calendário */
+.calendar-bottom-bar {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-back-month-btn {
+    background: #f8fafc;
+    color: #334155;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    margin: 0 auto;
+    display: block;
+}
+
+.calendar-back-month-btn:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #e0e7ef;
+    transform: none;
+}
+
+@media (max-width: 430px) {
+    .calendar-bottom-bar {
+        margin-bottom: 1rem;
+    }
+    .calendar-back-month-btn {
+        width: 100%;
+        padding: 0.7rem 0;
+        font-size: 1rem;
     }
 }

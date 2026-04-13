@@ -29,13 +29,14 @@ interface FormularioAgendamentoProps {
 }
 
 export default function FormularioAgendamento({ onAgendamentoSucesso }: FormularioAgendamentoProps) {
+    // Inicializa nome e pin a partir do localStorage, se existirem
     const [dataReserva, setDataReserva] = useState(getTodayDate());
     const [horaInicial, setHoraInicial] = useState('08');
     const [minutoInicial, setMinutoInicial] = useState('00');
     const [horaFinal, setHoraFinal] = useState('09');
     const [minutoFinal, setMinutoFinal] = useState('00');
-    const [nome, setNome] = useState('');
-    const [pin, setPin] = useState('');
+    const [nome, setNome] = useState(() => localStorage.getItem('nome_agendado_por') || '');
+    const [pin, setPin] = useState(() => localStorage.getItem('pin') || '');
 
     const [opcoesHoraInicialDisponiveis, setOpcoesHoraInicialDisponiveis] = useState(OPCOES_HORA);
     const [opcoesMinutoInicialDisponiveis, setOpcoesMinutoInicialDisponiveis] = useState(OPCOES_MINUTO);
@@ -116,14 +117,15 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             if (response.ok) {
                 alert('Agendamento criado com sucesso!');
                 localStorage.setItem('pin', pin);
+                localStorage.setItem('nome_agendado_por', nome);
                 onAgendamentoSucesso();
                 setDataReserva(getTodayDate());
                 setHoraInicial('08');
                 setMinutoInicial('00');
                 setHoraFinal('09');
                 setMinutoFinal('00');
-                setNome('');
-                setPin('');
+                setNome(localStorage.getItem('nome_agendado_por') || '');
+                setPin(localStorage.getItem('pin') || '');
             } else if (response.status === 409) {
                 const conflito = result.conflito;
                 alert(
@@ -240,7 +242,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
                     {/* Ícone dentro do wrapper para posicionamento */}
                     {BsLock({ className: "input-icon" })}
                     <input
-                        type="text"
+                        type="password"
                         id="pin"
                         value={pin}
                         onChange={(e) => setPin(e.target.value)}
