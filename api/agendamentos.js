@@ -76,6 +76,8 @@ export async function POST(request) {
     try {
         const { data_inicio, hora_inicial, hora_final, agendado_por, pin, codigo_lsee } = await request.json();
 
+        console.log('DEBUG POST:', { data_inicio, hora_inicial, hora_final, agendado_por });
+
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
@@ -100,7 +102,7 @@ export async function POST(request) {
             return NextResponse.json({ error: 'Dados incompletos. Todos os campos são obrigatórios.' }, { status: 400 });
         }
 
-        // Validação robusta de hora/minuto
+        // Validação robusta de hora/minuto - aceita formato HH:mm
         function horaValida(hora) {
             if (!hora || typeof hora !== 'string') return false;
             const partes = hora.split(':');
@@ -114,8 +116,9 @@ export async function POST(request) {
             );
         }
         if (!horaValida(hora_inicial) || !horaValida(hora_final)) {
+            console.log('Validação falhou:', { hora_inicial, hora_final });
             return NextResponse.json(
-                { error: 'Horário inválido. Hora deve ser entre 00:00 e 23:59.' },
+                { error: `Horário inválido. hora_inicial: ${hora_inicial}, hora_final: ${hora_final}` },
                 { status: 400 }
             );
         }
