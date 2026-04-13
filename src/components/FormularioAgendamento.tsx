@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 // Importe os ícones diretamente do react-icons
-import { BsCalendarDate, BsClock, BsPerson, BsLock } from 'react-icons/bs';
+import { BsPerson, BsLock } from 'react-icons/bs';
 import './Formulario.css';
 
 const gerarOpcoesHora = () => {
@@ -15,14 +15,6 @@ const gerarOpcoesMinuto = () => {
 
 const OPCOES_HORA = gerarOpcoesHora();
 const OPCOES_MINUTO = gerarOpcoesMinuto();
-
-interface Agendamento {
-    id: number;
-    data_inicio: string;
-    hora_inicial: string;
-    hora_final: string;
-    agendado_por: string;
-}
 
 const getTodayDate = () => {
     const today = new Date();
@@ -44,8 +36,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
     const [minutoFinal, setMinutoFinal] = useState('00');
     const [nome, setNome] = useState('');
     const [pin, setPin] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [disponivel, setDisponivel] = useState(true);
 
     const [opcoesHoraInicialDisponiveis, setOpcoesHoraInicialDisponiveis] = useState(OPCOES_HORA);
     const [opcoesMinutoInicialDisponiveis, setOpcoesMinutoInicialDisponiveis] = useState(OPCOES_MINUTO);
@@ -103,7 +93,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
 
         const novoAgendamento = {
             data_inicio: dataReserva,
@@ -150,8 +139,6 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         } catch (error) {
             alert('Erro de conexão com o servidor.');
             console.error('Erro ao enviar formulário:', error);
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -265,9 +252,8 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
             <button
                 type="submit"
                 className="form-button-modern"
-                disabled={!disponivel}
             >
-                {disponivel ? 'Confirmar Agendamento' : 'Horário Inválido'}
+                Confirmar Agendamento
             </button>
         </form>
     );
