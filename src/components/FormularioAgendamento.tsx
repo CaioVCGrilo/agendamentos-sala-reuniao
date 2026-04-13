@@ -126,6 +126,7 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
             if (response.ok) {
                 alert('Agendamento criado com sucesso!');
+                localStorage.setItem('pin', pin);
                 onAgendamentoSucesso();
                 setDataReserva(getTodayDate());
                 setHoraInicial('08');

@@ -37,34 +37,55 @@ export default function HomePage() {
     };
 
     const handleCancelamento = async (id: number) => {
-        const pinDigitado = prompt("Para cancelar, digite o PIN de liberação:");
+        // 1. Tenta obter o PIN salvo no localStorage
+        let pinDigitado = localStorage.getItem('pin');
+        let tentouPinSalvo = !!pinDigitado;
+        let cancelado = false;
+        let primeiraTentativa = true;
 
-        if (!pinDigitado) {
-            alert("Operação cancelada.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/agendamentos?id=${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ pinDigitado }),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert(`Agendamento ${id} cancelado com sucesso!`);
-                fetchAgendamentos(); // Recarrega a lista de agendamentos
-            } else {
-                alert(`Falha no Cancelamento: ${result.error || 'Erro desconhecido.'}`);
+        while (!cancelado) {
+            if (!pinDigitado) {
+                // Se não há PIN salvo ou já falhou, pede ao usuário
+                pinDigitado = prompt("Para cancelar, digite o PIN de liberação:");
+                tentouPinSalvo = false; // Agora é manual
             }
 
-        } catch (error) {
-            console.error("Erro na requisição DELETE:", error);
-            alert("Erro de conexão com o servidor ao tentar cancelar.");
+            if (!pinDigitado) {
+                alert("Operação cancelada.");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/agendamentos?id=${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pinDigitado }),
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(`Agendamento ${id} cancelado com sucesso!`);
+                    fetchAgendamentos(); // Recarrega a lista de agendamentos
+                    cancelado = true;
+                } else if (response.status === 403 && tentouPinSalvo && primeiraTentativa) {
+                    // PIN salvo incorreto, pede ao usuário
+                    pinDigitado = null;
+                    tentouPinSalvo = false;
+                    primeiraTentativa = false;
+                    alert('PIN incorreto ou não autorizado. Por favor, digite o PIN novamente.');
+                    // O loop continua e pedirá o PIN manualmente
+                } else {
+                    alert(`Falha no Cancelamento: ${result.error || 'Erro desconhecido.'}`);
+                    return;
+                }
+            } catch (error) {
+                console.error("Erro na requisição DELETE:", error);
+                alert("Erro de conexão com o servidor ao tentar cancelar.");
+                return;
+            }
         }
     };
 

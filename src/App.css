@@ -377,7 +377,44 @@
     padding-top: 1rem;
 }
 
-
+/* Próximos Agendamentos */
+.proximos-agendamentos {
+    margin-top: 1.5rem;
+    background: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+.proximos-agendamentos h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    color: #1f3a8a;
+    font-weight: 700;
+}
+.proximos-agendamentos ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.proximos-agendamentos li {
+    font-size: 0.98rem;
+    color: #374151;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+.proximos-agendamentos li:last-child {
+    border-bottom: none;
+}
+@media (max-width: 430px) {
+    .proximos-agendamentos {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+    .proximos-agendamentos h4 {
+        font-size: 1rem;
+    }
+}
 
 /* Responsividade: Dispositivos Móveis (Retrato) */
 @media (max-width: 640px) and (orientation: portrait) {
@@ -549,5 +586,72 @@
     /* Melhora a leitura dos eventos */
     .rbc-event {
         font-size: 0.9rem;
+    }
+}
+
+/* Responsividade para iPhone 12 (390px) */
+@media (max-width: 430px) {
+    .app-container {
+        padding: 0.5rem;
+    }
+    .main-card {
+        border-radius: 0.5rem;
+        max-width: 100vw;
+        margin: 0;
+        box-shadow: none;
+    }
+    .header {
+        padding: 1rem 0.5rem;
+    }
+    .header-title {
+        font-size: 1.1rem;
+    }
+    .header-subtitle {
+        font-size: 0.85rem;
+    }
+    .content-section {
+        padding: 0.5rem;
+    }
+    .section-title {
+        font-size: 1rem;
+        padding-bottom: 0.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .form-card {
+        padding: 0.5rem 0.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .calendar-container {
+        padding: 0;
+        min-width: 0;
+    }
+    .rbc-calendar {
+        font-size: 0.7rem;
+    }
+    .rbc-toolbar {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .rbc-month-view, .rbc-time-view, .rbc-agenda-view {
+        min-width: 0;
+    }
+    .event-details-popup {
+        left: 0 !important;
+        right: 0 !important;
+        width: 95vw !important;
+        max-width: 95vw !important;
+        min-width: unset !important;
+        font-size: 0.9rem;
+        padding: 0.5rem;
+    }
+    .button-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .cancel-button, .close-popup-button {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.5rem;
+        width: 100%;
     }
 }

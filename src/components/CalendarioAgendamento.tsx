@@ -142,6 +142,30 @@ export default function CalendarioAgendamento({ agendamentos, onCancelamento }: 
                     </div>
                 </div>
             )}
+
+            {/* Próximas 5 reuniões */}
+            <div className="proximos-agendamentos">
+                <h4>Próximas 5 reuniões</h4>
+                <ul>
+                    {agendamentos
+                        .map(agendamento => ({
+                            ...agendamento,
+                            dataHora: new Date(`${agendamento.data_inicio}T${agendamento.hora_inicial}`)
+                        }))
+                        .filter(a => a.dataHora >= new Date())
+                        .sort((a, b) => a.dataHora.getTime() - b.dataHora.getTime())
+                        .slice(0, 5)
+                        .map(a => (
+                            <li key={a.id} style={{marginBottom: 8}}>
+                                <strong>{a.data_inicio}</strong> {a.hora_inicial} - {a.hora_final} | {a.agendado_por}
+                            </li>
+                        ))
+                    }
+                    {agendamentos.filter(a => new Date(`${a.data_inicio}T${a.hora_inicial}`) >= new Date()).length === 0 && (
+                        <li>Nenhuma reunião futura agendada.</li>
+                    )}
+                </ul>
+            </div>
         </div>
     );
 }
