@@ -97,8 +97,8 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
         const novoAgendamento = {
             data_inicio: dataReserva,
-            hora_inicial: `${horaInicial}:${minutoInicial}`,
-            hora_final: `${horaFinal}:${minutoFinal}`,
+            hora_inicial: `${horaInicial.padStart(2, '0')}:${minutoInicial.padStart(2, '0')}`,
+            hora_final: `${horaFinal.padStart(2, '0')}:${minutoFinal.padStart(2, '0')}`,
             agendado_por: nome,
             pin: pin
         };
