@@ -55,7 +55,11 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
         if (isToday) {
             filteredHours = OPCOES_HORA.filter(h => parseInt(h) >= currentHour);
             if (parseInt(horaInicial) === currentHour) {
-                const currentMinuteInterval = Math.ceil((currentMinute + 1) / 15) * 15;
+                let currentMinuteInterval = Math.ceil((currentMinute + 1) / 15) * 15;
+                // Evitar que o minuto chegue a 60
+                if (currentMinuteInterval >= 60) {
+                    currentMinuteInterval = 0;
+                }
                 filteredMinutes = OPCOES_MINUTO.filter(m => parseInt(m) >= currentMinuteInterval);
             }
         }
@@ -64,7 +68,12 @@ export default function FormularioAgendamento({ onAgendamentoSucesso }: Formular
 
         if (isToday && parseInt(horaInicial) < currentHour) {
             setHoraInicial(String(currentHour).padStart(2, '0'));
-            setMinutoInicial(String(Math.ceil((currentMinute + 1) / 15) * 15).padStart(2, '0'));
+            let minutoCalc = Math.ceil((currentMinute + 1) / 15) * 15;
+            // Evitar que o minuto chegue a 60
+            if (minutoCalc >= 60) {
+                minutoCalc = 0;
+            }
+            setMinutoInicial(String(minutoCalc).padStart(2, '0'));
         }
     }, [dataReserva, horaInicial]);
 
